@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Generate version 4 UUIDs easily with BitAssist.tech. Click to generate a new UUID and copy it with a single button. Mobile responsive and SEO friendly.">
+        <meta name="keywords" content="UUID generator, version 4 UUID, BitAssist.tech, online UUID generator">
+        <title>BitAssist.tech - UUID Generator</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='50%' x='50%' dominant-baseline='middle' text-anchor='middle' font-size='20'>bitassist.tech</text></svg>">
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+                background-color: #f4f4f4;
+                transition: background-color 0.3s, color 0.3s;
+                overflow-x: hidden; /* Prevent horizontal scroll */
+            }
+            body.night-mode {
+                background-color: #333;
+                color: #fff;
+            }
+            header {
+                width: 100%;
+                background-color: #444;
+                color: #fff;
+                padding: 1rem;
+                text-align: center;
+                position: fixed;
+                top: 0;
+                left: 0;
+                z-index: 10;
+            }
+            nav {
+                margin: 1rem 0;
+            }
+            nav a {
+                color: #fff;
+                text-decoration: none;
+                margin: 0 1rem;
+                padding-right: 1rem; /* Added right padding */
+            }
+            .container {
+                text-align: center;
+                padding: 3rem;
+                background-color: #fff;
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                margin-top: 5rem; /* Adjust for fixed header */
+                width: 100%;
+                height: 100%;
+                transition: background-color 0.3s, color 0.3s;
+            }
+            .container.night-mode {
+                background-color: #444;
+                color: #fff;
+            }
+            button {
+                padding: 1rem 2rem;
+                margin-top: 1rem;
+                cursor: pointer;
+                background-color: #444;
+                color: #fff;
+                border: none;
+                border-radius: 4px;
+                font-size: 1rem;
+                transition: background-color 0.3s;
+            }
+            button.night-mode {
+                background-color: #555;
+            }
+            h1 {
+                font-size: 1.5rem;
+                font-family: 'Verdana', sans-serif;
+            }
+            h2 {
+                font-size: 2rem;
+            }
+            p {
+                font-size: 1.25rem;
+            }
+            #uuid {
+                font-size: 3vw; /* Make the UUID font size bigger */
+                display: inline-block;
+                margin-right: 1rem;
+                white-space: nowrap; /* Ensure UUID stays on one line */
+                width: 100%; /* Make sure it stretches the available space */
+                overflow: hidden; /* Hide any overflow */
+            }
+            .uuid-container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+            }
+            .copy-button {
+                width: 115px;/* Fixed width for the copy button */
+                padding: 11px 19px; 
+            }
+            @media (max-width: 600px) {
+                nav a {
+                display: block;
+                margin: 0.5rem 0;
+                }
+                .container {
+                width: 90%;
+                padding: 2rem;
+                }
+                button {
+                width: 100%;
+                padding: 1rem;
+                }
+            }
+            .moon-icon {
+                width: 24px;
+                height: 24px;
+                margin-right: 10px;
+                cursor: pointer;
+                transition: color 0.3s;
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+            }
+            body.night-mode .moon-icon {
+                color: #ccc; /* Dim white color */
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h1 style="margin: 0;">BitAssist.tech</h1>
+                <nav>
+                    <a href="index.html">Home</a>
+                <a href="running_horse.html" class="nav-link">Running horse</a>
+                <a href="privacy_policy.html">Privacy Policy</a>
+                </nav>
+            </div>
+        </header>
+        <div class="container">
+                <iframe src="clip_clop.html" frameborder="0" style="width: 100%; height: 100%;"></iframe>
+                <p>Source: <a href="https://codepen.io/ste-vg/pen/oKYjKV" target="_blank">Original Source</a></p>
+        </div>
+    
+</body>
+</html>
