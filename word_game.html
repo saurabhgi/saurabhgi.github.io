@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Chain Game</title>
+    <link rel="stylesheet" href="./css/common.css">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2CL4F9R5FE"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-2CL4F9R5FE');
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        #game-container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: white;
+        }
+        #word-list {
+            height: 200px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            text-align: left;
+            overflow-y: auto;
+        }
+        #timer {
+            font-size: 18px;
+            font-weight: bold;
+            color: red;
+        }
+        #score {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        input, button {
+            padding: 10px;
+            margin: 5px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            margin-left: -125px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 2px;
+            padding: 10px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 30px;
+            font-size: 17px;
+        }
+        .toast.show {
+            visibility: visible;
+            animation: fadein 0.5s, fadeout 1.5s 2.5s;
+        }
+        @keyframes fadein {
+            from { bottom: 0; opacity: 0; }
+            to { bottom: 30px; opacity: 1; }
+        }
+        @keyframes fadeout {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h1 style="margin: 0;">BitAssist.tech</h1>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="running_horse.html">Running horse</a>
+                <a href="word_game.html" class="nav-link">Word game</a>
+                <a href="privacy_policy.html">Privacy Policy</a>
+            </nav>
+        </div>
+    </header>
+<div id="game-container">
+    <h2>Word Chain Game</h2>
+    <div id="word-list">Words will appear here...</div>
+    <p>Next word must start with: <span id="next-letter">Any</span></p>
+    <input type="text" id="word-input" placeholder="Enter a word" onkeydown="handleKeyPress(event)">
+    <button onclick="submitWord()">Submit</button>
+    <p id="timer">Timer: 10s</p>
+    <p id="score">Score: 0</p>
+</div>
+
+<div id="toast"></div>
+
+<script>
+    let wordsUsed = new Set();
+    let lastLetter = null;
+    let timer;
+    let timeLeft = 10;
+    let isTimerRunning = false;
+    let lastWordScore = 0;
+
+    function showToast(message) {
+        let toast = document.getElementById("toast");
+        toast.innerText = message;
+        toast.className = "toast show";
+        setTimeout(() => {
+            toast.className = toast.className.replace("show", "");
+        }, 3000);
+    }
+
+    function startTimer() {
+        clearInterval(timer);
+        timeLeft = 10;
+        document.getElementById("timer").innerText = `Timer: ${timeLeft}s`;
+        isTimerRunning = true;
+
+        timer = setInterval(() => {
+            timeLeft--;
+            document.getElementById("timer").innerText = `Timer: ${timeLeft}s`;
+            if (timeLeft === 0) {
+                clearInterval(timer);
+                showToast("Time's up! Game Over.");
+                resetGame();
+            }
+        }, 1000);
+    }
+
+    function stopTimer() {
+        clearInterval(timer);
+        isTimerRunning = false;
+        document.getElementById("timer").innerText = "Timer: 10s";
+    }
+
+    function handleKeyPress(event) {
+        if (event.key === "Enter") {
+            submitWord();
+        }
+    }
+
+    function submitWord() {
+        let inputField = document.getElementById("word-input");
+        let word = inputField.value.trim().toLowerCase();
+        inputField.value = "";
+
+        if (!word) {
+            showToast("Please enter a word.");
+            return;
+        }
+
+        // Check if the word has already been used
+        if (wordsUsed.has(word)) {
+            showToast("Word already used. Try another!");
+            return;
+        }
+
+        // Check if the first letter matches the last letter
+        if (lastLetter && word[0] !== lastLetter) {
+            showToast(`Word must start with '${lastLetter.toUpperCase()}'`);
+            return;
+        }
+
+        // Validate word using DictionaryAPI.dev
+        showToast("Validating word...");
+        fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Invalid word!");
+                }
+                return response.json();
+            })
+            .then(data => {
+                wordsUsed.add(word);
+                lastLetter = word[word.length - 1];
+                lastWordScore = word.length;  // Update score with word length
+
+                let wordList = document.getElementById("word-list");
+                let wordElement = document.createElement("span");
+                wordElement.style.display = "inline-block";
+                wordElement.style.margin = "5px";
+                wordElement.style.padding = "5px";
+                wordElement.style.border = "1px solid #000";
+                wordElement.innerText = word;
+                wordList.appendChild(wordElement);
+
+                // Check if the word list container is overflowing
+                if (wordList.scrollHeight > wordList.clientHeight) {
+                    wordList.scrollTop = wordList.scrollHeight;
+                }
+
+                document.getElementById("next-letter").innerText = lastLetter.toUpperCase();
+
+                // Restart the timer after each valid word
+                startTimer();
+
+                document.getElementById("score").innerText = `Score: ${lastWordScore}`;  // Display the score
+
+                showToast("Word is valid!");
+            })
+            .catch(error => {
+                showToast("Invalid word! Please try another.");
+            });
+    }
+
+    function resetGame() {
+        wordsUsed.clear();
+        lastLetter = null;
+        lastWordScore = 0;  // Reset score
+        document.getElementById("word-list").innerHTML = "Words will appear here...";
+        document.getElementById("next-letter").innerText = "Any";
+        document.getElementById("score").innerText = `Score: ${lastWordScore}`;
+        stopTimer(); // Stop the timer
+    }
+
+    // The timer will start after the first valid word is entered
+</script>
+
+</body>
+</html>
