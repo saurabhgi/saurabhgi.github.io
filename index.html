@@ -10,70 +10,263 @@
     <title>BitAssist.tech - UUID Generator</title>
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='50%' x='50%' dominant-baseline='middle' text-anchor='middle' font-size='20'>bitassist.tech</text></svg>">
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2CL4F9R5FE"></script>
     <link rel="stylesheet" href="./css/common.css">
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
+    <style>
+        /* Main Content Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            transition: background-color 0.3s, color 0.3s;
+        }
 
-        gtag('config', 'G-2CL4F9R5FE');
-    </script>
-    
+        body.night-mode {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 100px auto 20px;
+            padding: 2rem;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container.night-mode {
+            background-color: #444;
+            color: #fff;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .uuid-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        #uuid {
+            font-size: 1.5rem;
+            word-break: break-all;
+            margin: 0;
+        }
+
+        button {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            background-color: #444;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+
+        .history-container {
+            margin-top: 2rem;
+        }
+
+        .history-container h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .history-container ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .history-container li {
+            font-size: 1rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .history-container li:last-child {
+            border-bottom: none;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: #444;
+            color: #fff;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+        }
+
+        .moon-icon {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        body.night-mode .moon-icon {
+            color: #ccc;
+        }
+
+        /* Toast Message Styles */
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+    </style>
 </head>
 
 <body>
+    <!-- Header -->
     <header>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h1 style="margin: 0;">BitAssist.tech</h1>
-            <nav>
-                <a href="index.html" class="nav-link">Home</a>
-                <a href="running_horse.html">Running horse</a>
-                <a href="word_game.html">Word game</a>
-                <a href="privacy_policy.html">Privacy Policy</a>
-            </nav>
-        </div>
+        <h1>BitAssist.tech</h1>
+        <nav id="nav-menu">
+            <a href="index.html">Home</a>
+            <a href="running_horse.html">Running Horse</a>
+            <a href="word_game.html">Word Game</a>
+            <a href="privacy_policy.html">Privacy Policy</a>
+        </nav>
+        <div class="hamburger" onclick="toggleMenu()">☰</div>
     </header>
+
+    <!-- Main Content -->
     <div class="container">
         <h2>Version 4 UUID Generator</h2>
         <div class="uuid-container">
             <p id="uuid">Click the button to generate a UUID</p>
-            <button class="copy-button" onclick="copyUUID()">Copy</button>
+            <button onclick="copyUUID()">Copy</button>
         </div>
         <button onclick="generateUUID()">Generate UUID</button>
+
+        <!-- UUID History -->
+        <div class="history-container">
+            <h3>Generated UUIDs (Session History)</h3>
+            <ul id="uuid-history"></ul>
+        </div>
     </div>
-    <div class="toggle-container">
+
+    <!-- Footer -->
+    <footer>
         <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" onclick="toggleNightMode()">
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
         </svg>
-    </div>
+    </footer>
+
+    <!-- Toast Container -->
+    <div id="toast" class="toast"></div>
+
     <script>
+        // JavaScript for UUID generation, copy, and night mode
+        let uuidHistory = [];
+
+        // Load night mode preference from localStorage
+        function loadNightMode() {
+            const isNightMode = localStorage.getItem('nightMode') === 'true';
+            if (isNightMode) {
+                document.body.classList.add('night-mode');
+                document.querySelector('.container').classList.add('night-mode');
+            }
+        }
+
+        // Toggle night mode and save preference to localStorage
+        function toggleNightMode() {
+            const body = document.body;
+            const container = document.querySelector('.container');
+            body.classList.toggle('night-mode');
+            container.classList.toggle('night-mode');
+
+            // Save the night mode preference to localStorage
+            const isNightMode = body.classList.contains('night-mode');
+            localStorage.setItem('nightMode', isNightMode);
+
+            // Show toast message
+            showToast(isNightMode ? 'Night mode enabled' : 'Night mode disabled');
+        }
+
+        // Show toast message
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.classList.add('show');
+
+            // Hide the toast after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Generate UUID
         function generateUUID() {
             const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
                 const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
                 return v.toString(16);
             });
             document.getElementById('uuid').innerText = uuid;
+            uuidHistory.push(uuid);
+            updateUUIDHistory();
+            showToast('New UUID generated');
         }
 
+        // Update UUID history
+        function updateUUIDHistory() {
+            const historyContainer = document.getElementById('uuid-history');
+            historyContainer.innerHTML = '';
+            uuidHistory.slice().reverse().forEach(uuid => {
+                const listItem = document.createElement('li');
+                listItem.innerText = uuid;
+                historyContainer.appendChild(listItem);
+            });
+        }
+
+        // Copy UUID to clipboard
         function copyUUID() {
             const uuid = document.getElementById('uuid').innerText;
             navigator.clipboard.writeText(uuid).then(() => {
-                alert('UUID copied to clipboard');
+                showToast('UUID copied to clipboard');
             });
         }
 
-        function toggleNightMode() {
-            document.body.classList.toggle('night-mode');
-            document.querySelector('.container').classList.toggle('night-mode');
-            document.querySelectorAll('button').forEach(button => {
-                button.classList.toggle('night-mode');
-            });
+        // Toggle mobile navigation menu
+        function toggleMenu() {
+            const navMenu = document.getElementById('nav-menu');
+            navMenu.classList.toggle('active');
         }
 
-        generateUUID()
+        // Initialize
+        function init() {
+            loadNightMode(); // Load night mode preference
+            generateUUID(); // Generate initial UUID
+        }
+
+        // Run initialization
+        init();
     </script>
 </body>
 

@@ -5,40 +5,130 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
-        content="Generate version 4 UUIDs easily with BitAssist.tech. Click to generate a new UUID and copy it with a single button. Mobile responsive and SEO friendly.">
-    <meta name="keywords" content="UUID generator, version 4 UUID, BitAssist.tech, online UUID generator">
+        content="Privacy Policy for BitAssist.tech. Learn how we collect, use, and protect your information.">
+    <meta name="keywords" content="privacy policy, BitAssist.tech, data collection, cookies, Google Analytics">
+    <title>BitAssist.tech - Privacy Policy</title>
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='50%' x='50%' dominant-baseline='middle' text-anchor='middle' font-size='20'>bitassist.tech</text></svg>">
-    <title>Privacy Policy</title>
     <link rel="stylesheet" href="./css/common.css">
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2CL4F9R5FE"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-
-        gtag('config', 'G-2CL4F9R5FE');
-    </script>
     <style>
-        body{
-            justify-content: unset;
+        /* Main Content Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.night-mode {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 100px auto 20px;
+            padding: 2rem;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container.night-mode {
+            background-color: #444;
+            color: #fff;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        p {
+            font-size: 1rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        ul {
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: #444;
+            color: #fff;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+        }
+
+        .moon-icon {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        body.night-mode .moon-icon {
+            color: #ccc;
+        }
+
+        /* Toast Message Styles */
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .toast.show {
+            opacity: 1;
         }
     </style>
 </head>
 
 <body>
+    <!-- Header -->
     <header>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h1 style="margin: 0;">BitAssist.tech</h1>
-            <nav>
-                <a href="index.html">Home</a>
-                <a href="running_horse.html" >Running horse</a>
-                <a href="word_game.html">Word game</a>
-                <a href="privacy_policy.html" class="nav-link">Privacy Policy</a>
-            </nav>
-        </div>
+        <h1>BitAssist.tech</h1>
+        <nav id="nav-menu">
+            <a href="index.html">Home</a>
+            <a href="running_horse.html">Running Horse</a>
+            <a href="word_game.html">Word Game</a>
+            <a href="privacy_policy.html">Privacy Policy</a>
+        </nav>
+        <div class="hamburger" onclick="toggleMenu()">☰</div>
     </header>
+
+    <!-- Main Content -->
     <div class="container">
         <h1>Privacy Policy</h1>
         <p>Effective Date: 03-01-2025</p>
@@ -131,20 +221,69 @@
         <p>Email: bitassist.tech@gmail.com</p>
         <p>Website: www.bitasssit.tech</p>
     </div>
-    <div class="toggle-container">
+
+    <!-- Footer -->
+    <footer>
         <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" onclick="toggleNightMode()">
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
         </svg>
-    </div>
+    </footer>
+
+    <!-- Toast Container -->
+    <div id="toast" class="toast"></div>
+
     <script>
-        function toggleNightMode() {
-            document.body.classList.toggle('night-mode');
-            document.querySelector('.container').classList.toggle('night-mode');
-            document.querySelectorAll('button').forEach(button => {
-                button.classList.toggle('night-mode');
-            });
+        // JavaScript for night mode and toast messages
+        // Load night mode preference from localStorage
+        function loadNightMode() {
+            const isNightMode = localStorage.getItem('nightMode') === 'true';
+            if (isNightMode) {
+                document.body.classList.add('night-mode');
+                document.querySelector('.container').classList.add('night-mode');
+            }
         }
+
+        // Toggle night mode and save preference to localStorage
+        function toggleNightMode() {
+            const body = document.body;
+            const container = document.querySelector('.container');
+            body.classList.toggle('night-mode');
+            container.classList.toggle('night-mode');
+
+            // Save the night mode preference to localStorage
+            const isNightMode = body.classList.contains('night-mode');
+            localStorage.setItem('nightMode', isNightMode);
+
+            // Show toast message
+            showToast(isNightMode ? 'Night mode enabled' : 'Night mode disabled');
+        }
+
+        // Show toast message
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.classList.add('show');
+
+            // Hide the toast after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Toggle mobile navigation menu
+        function toggleMenu() {
+            const navMenu = document.getElementById('nav-menu');
+            navMenu.classList.toggle('active');
+        }
+
+        // Initialize
+        function init() {
+            loadNightMode(); // Load night mode preference
+        }
+
+        // Run initialization
+        init();
     </script>
 </body>
 

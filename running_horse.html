@@ -4,13 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description"
-        content="Generate version 4 UUIDs easily with BitAssist.tech. Click to generate a new UUID and copy it with a single button. Mobile responsive and SEO friendly.">
-    <meta name="keywords" content="UUID generator, version 4 UUID, BitAssist.tech, online UUID generator">
-    <title>BitAssist.tech - UUID Generator</title>
+    <title>Clip Clop Animation - BitAssist.tech</title>
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='50%' x='50%' dominant-baseline='middle' text-anchor='middle' font-size='20'>bitassist.tech</text></svg>">
-    <!-- Google tag (gtag.js) -->
+    <link rel="stylesheet" href="./css/common.css">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-2CL4F9R5FE"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -19,26 +16,187 @@
 
         gtag('config', 'G-2CL4F9R5FE');
     </script>
-    <link rel="stylesheet" href="./css/common.css">
+    <style>
+        /* Main Content Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.night-mode {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .container {
+            width: 100%;
+            height: calc(100vh - 120px); /* Full height minus header and footer */
+            margin: 0;
+            padding: 0;
+            border-radius: 0;
+            box-shadow: none;
+            background-color: #fff;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container.night-mode {
+            background-color: #444;
+            color: #fff;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .source-link {
+            text-align: center;
+            padding: 10px;
+            background-color: #f4f4f4;
+            border-top: 1px solid #ccc;
+        }
+
+        .source-link a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .source-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Toast Message Styles */
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: #444;
+            color: #fff;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+        }
+
+        /* Moon Icon Styles */
+        .moon-icon {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        body.night-mode .moon-icon {
+            color: #ccc; /* Dim white color in night mode */
+        }
+    </style>
 </head>
 
 <body>
+    <!-- Header -->
     <header>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h1 style="margin: 0;">BitAssist.tech</h1>
-            <nav>
-                <a href="index.html">Home</a>
-                <a href="running_horse.html" class="nav-link">Running horse</a>
-                <a href="word_game.html">Word game</a>
-                <a href="privacy_policy.html">Privacy Policy</a>
-            </nav>
-        </div>
+        <h1>BitAssist.tech</h1>
+        <nav id="nav-menu">
+            <a href="index.html">Home</a>
+            <a href="running_horse.html">Running Horse</a>
+            <a href="word_game.html">Word Game</a>
+            <a href="privacy_policy.html">Privacy Policy</a>
+        </nav>
+        <div class="hamburger" onclick="toggleMenu()">☰</div>
     </header>
+
+    <!-- Main Content -->
     <div class="container">
-        <iframe src="clip_clop.html" frameborder="0" style="width: 100%; height: 100%;"></iframe>
-        <p>Source: <a href="https://codepen.io/ste-vg/pen/oKYjKV" target="_blank">Original Source</a></p>
+        <iframe src="clip_clop.html" frameborder="0"></iframe>
+        <div class="source-link">
+            <p>Source: <a href="https://codepen.io/ste-vg/pen/oKYjKV" target="_blank">Original Source</a></p>
+        </div>
     </div>
 
+    <!-- Footer -->
+    <footer>
+        <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" onclick="toggleNightMode()">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </footer>
+
+    <!-- Toast Container -->
+    <div id="toast" class="toast"></div>
+
+    <script>
+        // JavaScript for Night Mode and Toast Messages
+        // Load night mode preference from localStorage
+        function loadNightMode() {
+            const isNightMode = localStorage.getItem('nightMode') === 'true';
+            if (isNightMode) {
+                document.body.classList.add('night-mode');
+                document.querySelector('.container').classList.add('night-mode');
+            }
+        }
+
+        // Toggle night mode and save preference to localStorage
+        function toggleNightMode() {
+            const body = document.body;
+            const container = document.querySelector('.container');
+            body.classList.toggle('night-mode');
+            container.classList.toggle('night-mode');
+
+            // Save the night mode preference to localStorage
+            const isNightMode = body.classList.contains('night-mode');
+            localStorage.setItem('nightMode', isNightMode);
+
+            // Show toast message
+            showToast(isNightMode ? 'Night mode enabled' : 'Night mode disabled');
+        }
+
+        // Show toast message
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.classList.add('show');
+
+            // Hide the toast after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Toggle mobile navigation menu
+        function toggleMenu() {
+            const navMenu = document.getElementById('nav-menu');
+            navMenu.classList.toggle('active');
+        }
+
+        // Initialize
+        function init() {
+            loadNightMode(); // Load night mode preference
+        }
+
+        // Run initialization
+        init();
+    </script>
 </body>
 
 </html>
