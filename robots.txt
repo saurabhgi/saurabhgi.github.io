@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Disallow crawling of specific pages or directories
+Disallow: /private/
+Disallow: /temp/
+Disallow: /admin/
+
+# Sitemap location
+Sitemap: https://www.bitassist.tech/sitemap.xml
