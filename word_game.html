@@ -141,6 +141,43 @@
         body.night-mode .moon-icon {
             color: #ccc;
         }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 8px;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .modal-actions button {
+            margin-left: 10px;
+        }
+
+        body.night-mode .modal-content {
+            background-color: #444;
+            color: #fff;
+        }
     </style>
 </head>
 
@@ -166,6 +203,21 @@
         <button onclick="submitWord()">Submit</button>
         <p id="timer">Timer: 10s</p>
         <p id="score">Score: 0</p>
+        <div id="previous-scores"></div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div id="gameOverModal" class="modal">
+        <div class="modal-content">
+            <h3>Game Over!</h3>
+            <p>Your score: <span id="final-score">0</span></p>
+            <label for="score-tag">Add a tag (optional):</label>
+            <input type="text" id="score-tag" placeholder="e.g., 'Morning Game'">
+            <div class="modal-actions">
+                <button onclick="saveScore()">Save Score</button>
+                <button onclick="closeModal()">Close</button>
+            </div>
+        </div>
     </div>
 
     <!-- Footer -->
@@ -186,7 +238,19 @@
         let timer;
         let timeLeft = 10;
         let isTimerRunning = false;
-        let lastWordScore = 0;
+        let currentScore = 0;
+        let previousScores = JSON.parse(localStorage.getItem('wordGameScores')) || [];
+
+        // Initialize previous scores display
+        function displayPreviousScores() {
+            const scoresContainer = document.getElementById('previous-scores');
+            if (previousScores.length > 0) {
+                scoresContainer.innerHTML = '<h3>Previous Scores:</h3><ul>' + 
+                    previousScores.map(score => 
+                        `<li>${score.score} points${score.tag ? ' (' + score.tag + ')' : ''} - ${new Date(score.date).toLocaleString()}</li>`
+                    ).join('') + '</ul>';
+            }
+        }
 
         // Show toast message
         function showToast(message) {
@@ -213,7 +277,7 @@
                 if (timeLeft === 0) {
                     clearInterval(timer);
                     showToast("Time's up! Game Over.");
-                    resetGame();
+                    endGame();
                 }
             }, 1000);
         }
@@ -267,7 +331,9 @@
                 .then(data => {
                     wordsUsed.add(word);
                     lastLetter = word[word.length - 1];
-                    lastWordScore += word.length; // Update score with word length
+                    
+                    // Update score by 1 for each valid word
+                    currentScore += 1;
 
                     let wordList = document.getElementById("word-list");
                     let wordElement = document.createElement("span");
@@ -284,28 +350,61 @@
                     }
 
                     document.getElementById("next-letter").innerText = lastLetter.toUpperCase();
+                    document.getElementById("score").innerText = `Score: ${currentScore}`;
 
                     // Restart the timer after each valid word
                     startTimer();
 
-                    document.getElementById("score").innerText = `Score: ${lastWordScore}`; // Display the score
-
-                    showToast("Word is valid!");
+                    showToast("+1 point! Word is valid!");
                 })
                 .catch(error => {
                     showToast("Invalid word! Please try another.");
                 });
         }
 
+        // End the game
+        function endGame() {
+            document.getElementById('final-score').textContent = currentScore;
+            document.getElementById('gameOverModal').style.display = 'block';
+        }
+
+        // Save score with optional tag
+        function saveScore() {
+            const tagInput = document.getElementById('score-tag');
+            const tag = tagInput.value.trim();
+            
+            const scoreData = {
+                score: currentScore,
+                tag: tag || null,
+                date: new Date().toISOString()
+            };
+            
+            previousScores.unshift(scoreData); // Add to beginning of array
+            if (previousScores.length > 10) {
+                previousScores = previousScores.slice(0, 10); // Keep only last 10 scores
+            }
+            
+            localStorage.setItem('wordGameScores', JSON.stringify(previousScores));
+            closeModal();
+            resetGame();
+            displayPreviousScores();
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('gameOverModal').style.display = 'none';
+            document.getElementById('score-tag').value = '';
+        }
+
         // Reset the game
         function resetGame() {
             wordsUsed.clear();
             lastLetter = null;
-            lastWordScore = 0; // Reset score
+            currentScore = 0;
             document.getElementById("word-list").innerHTML = "Words will appear here...";
             document.getElementById("next-letter").innerText = "Any";
-            document.getElementById("score").innerText = `Score: ${lastWordScore}`;
-            stopTimer(); // Stop the timer
+            document.getElementById("score").innerText = `Score: ${currentScore}`;
+            stopTimer();
         }
 
         // Night Mode and Toast Messages
@@ -339,6 +438,7 @@
         // Initialize
         function init() {
             loadNightMode(); // Load night mode preference
+            displayPreviousScores(); // Show previous scores
         }
 
         // Run initialization
