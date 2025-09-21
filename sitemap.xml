@@ -2,40 +2,40 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <!-- Home Page -->
     <url>
-        <loc>https://www.bitassist.tech/</loc>
-        <lastmod>2023-10-01</lastmod>
+        <loc>https://bitassist.tech/</loc>
+        <lastmod>2025-09-21</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
     </url>
 
     <!-- Running Horse Page -->
     <url>
-        <loc>https://www.bitassist.tech/running_horse.html</loc>
-        <lastmod>2023-10-01</lastmod>
+        <loc>https://bitassist.tech/running_horse.html</loc>
+        <lastmod>2025-09-21</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
 
     <!-- Word Game Page -->
     <url>
-        <loc>https://www.bitassist.tech/word_game.html</loc>
-        <lastmod>2023-10-01</lastmod>
+        <loc>https://bitassist.tech/word_game.html</loc>
+        <lastmod>2025-09-21</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
 
     <!-- Privacy Policy Page -->
     <url>
-        <loc>https://www.bitassist.tech/privacy_policy.html</loc>
-        <lastmod>2023-10-01</lastmod>
+        <loc>https://bitassist.tech/privacy_policy.html</loc>
+        <lastmod>2025-09-21</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
 
     <!-- Clip Clop Animation Page -->
     <url>
-        <loc>https://www.bitassist.tech/clip_clop.html</loc>
-        <lastmod>2023-10-01</lastmod>
+        <loc>https://bitassist.tech/clip_clop.html</loc>
+        <lastmod>2025-09-21</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
